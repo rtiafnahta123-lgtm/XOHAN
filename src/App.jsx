@@ -1032,9 +1032,9 @@ export default function App() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onMouseMove={mag}
-                  onMouseLeave={e=>{magReset(e);e.currentTarget.style.background='#1DBF73';e.currentTarget.style.boxShadow='0 0 24px rgba(29,191,115,0.35)';}}
-                  onMouseEnter={e=>{e.currentTarget.style.background='#17a863';e.currentTarget.style.boxShadow='0 8px 32px rgba(29,191,115,0.55)';}}
-                  style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'#1DBF73', color:'#fff', padding:'clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 1.75rem)', fontFamily:INTER, fontSize:'clamp(0.6rem, 1vw, 0.72rem)', letterSpacing:'0.2em', textTransform:'uppercase', fontWeight:700, textDecoration:'none', transition:'background 0.25s, box-shadow 0.25s, transform 0.4s', boxShadow:'0 0 24px rgba(29,191,115,0.35)' }}
+                  onMouseLeave={e=>{magReset(e);e.currentTarget.style.background=CR;e.currentTarget.style.boxShadow=`0 0 24px ${CR50}`;}}
+                  onMouseEnter={e=>{e.currentTarget.style.background='#b80f30';e.currentTarget.style.boxShadow=`0 8px 32px ${CR}, 0 0 60px ${CR50}`;}}
+                  style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:CR, color:'#fff', padding:'clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 1.75rem)', fontFamily:INTER, fontSize:'clamp(0.6rem, 1vw, 0.72rem)', letterSpacing:'0.2em', textTransform:'uppercase', fontWeight:700, textDecoration:'none', transition:'background 0.25s, box-shadow 0.25s, transform 0.4s', boxShadow:`0 0 24px ${CR50}` }}
                 >
                   HIRE ME <ArrowUpRight style={{ width:13,height:13 }} />
                 </a>
