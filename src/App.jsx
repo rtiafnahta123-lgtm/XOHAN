@@ -938,16 +938,16 @@ export default function App() {
     <div style={{ background:'#000', color:'#fff', overflowX:'hidden' }}>
 
       {/* ══════════ HERO (fullscreen, sticky navbar) ══════════ */}
-      <div className="relative w-full h-screen overflow-hidden bg-black">
+      <div className="relative w-full bg-black hero-full" style={{ overflow:'hidden', position:'relative' }}>
 
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }}
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_154941_df1a96e1-a06f-450c-bd02-d863414cc1a0.mp4"
           autoPlay muted loop playsInline
         />
-        <div className="absolute inset-0" style={{ background:'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.85) 100%)' }} />
+        <div style={{ position:'absolute', inset:0, background:'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.85) 100%)' }} />
 
-        <div className="relative z-10 flex flex-col h-full">
+        <div className="relative z-10 flex flex-col hero-full">
 
           {/* ─── Navbar ─── */}
           <nav style={{ display:'flex', alignItems:'center', padding:'clamp(1.25rem, 3vw, 1.75rem) clamp(1.5rem, 5vw, 4rem)', gap:0 }}>
@@ -960,7 +960,7 @@ export default function App() {
             </div>
 
             {/* ── Center column: Nav links (desktop only) ── */}
-            <ul className="hidden md:flex" style={{ listStyle:'none', display:'flex', alignItems:'center', gap:'2.25rem', margin:0, padding:0, flexShrink:0 }}>
+            <ul className="hidden md:flex" style={{ listStyle:'none', alignItems:'center', gap:'2.25rem', margin:0, padding:0, flexShrink:0 }}>
               {NAV_LINKS.map(({ label, id }) => (
                 <li key={id} style={{ listStyle:'none' }}>
                   <button onClick={()=>scrollTo('#'+id)}
@@ -977,26 +977,28 @@ export default function App() {
             <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'flex-end' }}>
               <a href="#contact" onClick={e=>{e.preventDefault();scrollTo('#contact');}}
                 className="hidden md:inline-flex"
-                style={{ display:'flex', alignItems:'center', gap:'7px', border:'1px solid rgba(255,255,255,0.22)', padding:'0.65rem 1.35rem', fontFamily:INTER, fontSize:'0.65rem', letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.8)', textDecoration:'none', transition:'border-color 0.3s, background 0.3s, color 0.3s', lineHeight:1, flexShrink:0 }}
+                style={{ alignItems:'center', gap:'7px', border:'1px solid rgba(255,255,255,0.22)', padding:'0.65rem 1.35rem', fontFamily:INTER, fontSize:'0.65rem', letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.8)', textDecoration:'none', transition:'border-color 0.3s, background 0.3s, color 0.3s', lineHeight:1, flexShrink:0 }}
                 onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.55)';e.currentTarget.style.background='rgba(255,255,255,0.06)';e.currentTarget.style.color='#fff';}}
                 onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.22)';e.currentTarget.style.background='transparent';e.currentTarget.style.color='rgba(255,255,255,0.8)';}}
                 onMouseMove={mag}
-                onBlur={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.22)';e.currentTarget.style.background='transparent';magReset(e);}}>
+                onBlur={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,0.22)';e.currentTarget.style.background='transparent';magReset(e);}}>  
                 GET IN TOUCH <ArrowUpRight style={{ width:11,height:11 }} />
               </a>
-              <button className="md:hidden" onClick={()=>setMenuOpen(true)} aria-label="Open menu"
-                style={{ display:'flex', flexDirection:'column', gap:'5px', background:'none', border:'none', cursor:'pointer', padding:'6px' }}>
-                <span style={{ display:'block', width:22, height:1.5, background:'#fff' }} />
-                <span style={{ display:'block', width:22, height:1.5, background:'#fff' }} />
-                <span style={{ display:'block', width:14, height:1.5, background:'#fff' }} />
-              </button>
+              <div className="md:hidden">
+                <button onClick={()=>setMenuOpen(true)} aria-label="Open menu"
+                  style={{ display:'flex', flexDirection:'column', gap:'5px', background:'none', border:'none', cursor:'pointer', padding:'6px' }}>
+                  <span style={{ display:'block', width:22, height:1.5, background:'#fff' }} />
+                  <span style={{ display:'block', width:22, height:1.5, background:'#fff' }} />
+                  <span style={{ display:'block', width:14, height:1.5, background:'#fff' }} />
+                </button>
+              </div>
             </div>
 
           </nav>
 
 
           {/* ─── Hero content ─── */}
-          <div style={{ flex:1, display:'flex', alignItems:'center', padding:'0 clamp(1.5rem, 5vw, 4rem)', paddingBottom:'3rem' }}>
+          <div style={{ flex:1, display:'flex', alignItems:'flex-start', padding:'0 clamp(1.5rem, 5vw, 4rem)', paddingTop:'clamp(2rem, 6vw, 4rem)', paddingBottom:'clamp(3rem, 8vw, 5rem)' }}>
             <div style={{ maxWidth:'1280px', width:'100%' }}>
               <div className="animate-fade-up" style={{ display:'flex', alignItems:'center', gap:'0.625rem', marginBottom:'clamp(1.25rem, 3vw, 2rem)' }}>
                 <Crown style={{ width:14, height:14, color:'rgba(255,255,255,0.5)', flexShrink:0 }} />

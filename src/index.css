@@ -443,3 +443,20 @@ a, button, [role='button'] { cursor: pointer; }
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── Mobile-safe full-screen hero height ── */
+/* 100svh = viewport minus mobile browser chrome (address bar, etc.)  */
+/* Older browsers fall back to the 100vh value set inline via JS.      */
+.hero-full {
+  min-height: 100vh; /* fallback */
+  min-height: 100svh; /* modern — excludes mobile toolbars */
+}
+
+/* On very small / short screens let the hero scroll naturally */
+@media (max-height: 600px) {
+  .hero-full {
+    min-height: auto;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
