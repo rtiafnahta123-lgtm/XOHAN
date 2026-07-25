@@ -1032,9 +1032,9 @@ export default function App() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onMouseMove={mag}
-                  onMouseLeave={e=>{magReset(e);e.currentTarget.style.background=CR;e.currentTarget.style.boxShadow=`0 0 24px ${CR50}`;}}
-                  onMouseEnter={e=>{e.currentTarget.style.background='#b80f30';e.currentTarget.style.boxShadow=`0 8px 32px ${CR}, 0 0 60px ${CR50}`;}}
-                  style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:CR, color:'#fff', padding:'clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 1.75rem)', fontFamily:INTER, fontSize:'clamp(0.6rem, 1vw, 0.72rem)', letterSpacing:'0.2em', textTransform:'uppercase', fontWeight:700, textDecoration:'none', transition:'background 0.25s, box-shadow 0.25s, transform 0.4s', boxShadow:`0 0 24px ${CR50}` }}
+                  onMouseLeave={e=>{magReset(e);e.currentTarget.style.background='transparent';e.currentTarget.style.borderColor='rgba(255,255,255,0.35)';e.currentTarget.style.color='rgba(255,255,255,0.85)';e.currentTarget.style.boxShadow='none';}}
+                  onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,0.08)';e.currentTarget.style.borderColor='rgba(255,255,255,0.75)';e.currentTarget.style.color='#fff';e.currentTarget.style.boxShadow='0 8px 30px rgba(255,255,255,0.08)';}}
+                  style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'transparent', color:'rgba(255,255,255,0.85)', border:'1px solid rgba(255,255,255,0.35)', padding:'clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 1.75rem)', fontFamily:INTER, fontSize:'clamp(0.6rem, 1vw, 0.72rem)', letterSpacing:'0.2em', textTransform:'uppercase', fontWeight:700, textDecoration:'none', transition:'background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s, transform 0.4s' }}
                 >
                   HIRE ME <ArrowUpRight style={{ width:13,height:13 }} />
                 </a>
