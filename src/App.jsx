@@ -1025,6 +1025,20 @@ export default function App() {
                   >
                   VIEW MY WORK <ArrowUpRight style={{ width:13,height:13 }} />
                 </a>
+
+                {/* ── Hire Me on Fiverr ── */}
+                <a
+                  href="https://www.fiverr.com/rifat_designer9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onMouseMove={mag}
+                  onMouseLeave={e=>{magReset(e);e.currentTarget.style.background='#1DBF73';e.currentTarget.style.boxShadow='0 0 24px rgba(29,191,115,0.35)';}}
+                  onMouseEnter={e=>{e.currentTarget.style.background='#17a863';e.currentTarget.style.boxShadow='0 8px 32px rgba(29,191,115,0.55)';}}
+                  style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'#1DBF73', color:'#fff', padding:'clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 3vw, 1.75rem)', fontFamily:INTER, fontSize:'clamp(0.6rem, 1vw, 0.72rem)', letterSpacing:'0.2em', textTransform:'uppercase', fontWeight:700, textDecoration:'none', transition:'background 0.25s, box-shadow 0.25s, transform 0.4s', boxShadow:'0 0 24px rgba(29,191,115,0.35)' }}
+                >
+                  HIRE ME <ArrowUpRight style={{ width:13,height:13 }} />
+                </a>
+
                 <div className="hidden sm:flex" style={{ alignItems:'center', gap:'0.75rem' }}>
                   <Award style={{ width:28, height:28, color:'rgba(255,255,255,0.35)' }} />
                   <div style={{ fontFamily:INTER, fontSize:'0.62rem', color:'rgba(255,255,255,0.45)', letterSpacing:'0.1em', textTransform:'uppercase', lineHeight:1.65 }}>
@@ -1032,6 +1046,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
               <div className="animate-fade-up-delay-4" style={{ display:'flex', flexWrap:'wrap', gap:'clamp(1.25rem, 4vw, 4rem)', marginTop:'clamp(2rem, 4vw, 3.5rem)' }}>
                 {HERO_STATS.map(({ value, label }) => (
                   <div key={label}>
