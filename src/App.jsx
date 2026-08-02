@@ -266,146 +266,381 @@ function About() {
   );
 }
 
-/* ══════════════════════ SKILL RADAR ════════════════════════════════════════ */
-const RS = [
-  { name:'Discord Design', value:95 },
-  { name:'Server Dev',     value:92 },
-  { name:'Bot Config',     value:90 },
-  { name:'Bot Automation', value:87 },
-  { name:'UI/UX Design',   value:88 },
-  { name:'Community Mgmt', value:85 },
-  { name:'Dashboard UI',   value:82 },
-  { name:'Strategy',       value:80 },
+/* ══════════════════════ SKILL NETWORK DATA ═════════════════════════════════ */
+const SKILL_NODES = [
+  {
+    id:'discord-dev', label:'Discord Dev', fullLabel:'Discord Development',
+    desc:'Building premium Discord communities from scratch — structured for scale, performance, and seamless member experience.',
+    tools:['Carl-bot','Ticket Tool','Dyno','MEE6','Discord API','Sapphire'],
+    tags:['Permissions','Verification','Ticket Systems','Auto Roles','Level Systems','Security','Logging'],
+    xp:95, projects:['Apex Gaming Hub','Creator Circle','EduStream Academy'],
+  },
+  {
+    id:'server-design', label:'Server Design', fullLabel:'Discord Server Design',
+    desc:'Complete visual identity for Discord servers — custom embeds, branding, channel structure, and aesthetic coherence.',
+    tools:['Discord Embeds','Canva','Figma','Carl-bot Embeds'],
+    tags:['Channel Architecture','Branding','Embeds','Role Icons','Server Banner'],
+    xp:92, projects:['Apex Gaming Hub','CryptoVault Community','Nebula Dashboard'],
+  },
+  {
+    id:'bot-config', label:'Bot Config', fullLabel:'Bot Configuration',
+    desc:'Full setup and precise configuration of popular bots — tailored workflows, auto-moderation, and leveling systems.',
+    tools:['Carl-bot','MEE6','Dyno','Ticket Tool','YAGPDB','Statbot'],
+    tags:['Reaction Roles','Auto-Mod','Leveling','Logging','Welcome Messages'],
+    xp:90, projects:['Apex Gaming Hub','CryptoVault Community','Creator Circle'],
+  },
+  {
+    id:'bot-automation', label:'Bot Automation', fullLabel:'Bot Automation',
+    desc:'Custom automation flows, scheduled triggers, slash commands — making your server run on autopilot.',
+    tools:['Discord API','Carl-bot','Zapier','Webhooks','Scheduled Tasks'],
+    tags:['Automation Flows','Triggers','Slash Commands','Webhooks','Scheduled Posts'],
+    xp:87, projects:['CryptoVault Community','Apex Gaming Hub'],
+  },
+  {
+    id:'uiux', label:'UI/UX Design', fullLabel:'UI/UX Design',
+    desc:'Production-ready Figma designs for dashboards, landing pages, and interfaces — with a full design system included.',
+    tools:['Figma','FigJam','Framer','Principle','Adobe XD'],
+    tags:['Landing Pages','Dashboards','Design Systems','Wireframes','Prototypes'],
+    xp:88, projects:['Nebula Dashboard','Apex Gaming Hub'],
+  },
+  {
+    id:'frontend', label:'Frontend Dev', fullLabel:'Frontend Development',
+    desc:'React-powered interfaces with modern CSS, smooth animations, and responsive layouts — performant and pixel-perfect.',
+    tools:['React','Vite','TailwindCSS','CSS3','Framer Motion'],
+    tags:['React','Responsive','Animations','CSS','Performance'],
+    xp:82, projects:['Nebula Dashboard','XOHAN Portfolio'],
+  },
+  {
+    id:'backend', label:'Backend Dev', fullLabel:'Backend Development',
+    desc:'Node.js server-side logic, REST APIs, and bot backends — reliable, scalable, and well-structured.',
+    tools:['Node.js','Express','REST API','WebSockets','JWT'],
+    tags:['REST APIs','Auth','WebSockets','Middleware','Error Handling'],
+    xp:78, projects:['CryptoVault Community','Nebula Dashboard'],
+  },
+  {
+    id:'database', label:'Database', fullLabel:'Database Design',
+    desc:'Structured data models for Discord bots and web apps — optimized schemas and clean query design.',
+    tools:['MongoDB','PostgreSQL','Supabase','Prisma','Redis'],
+    tags:['Schema Design','Indexing','Queries','Relations','Caching'],
+    xp:75, projects:['CryptoVault Community'],
+  },
+  {
+    id:'api', label:'API Integration', fullLabel:'API Integration',
+    desc:'Connecting Discord bots and web apps to third-party services — clean, typed, and error-resilient integrations.',
+    tools:['REST','GraphQL','Discord API','Stripe','OAuth2'],
+    tags:['Auth','Webhooks','Rate Limiting','Error Handling','OAuth'],
+    xp:80, projects:['CryptoVault Community','Nebula Dashboard'],
+  },
+  {
+    id:'branding', label:'Branding', fullLabel:'Branding',
+    desc:'Visual identity systems for Discord communities and digital products — logos, color systems, and brand guidelines.',
+    tools:['Figma','Illustrator','Photoshop','Canva Pro'],
+    tags:['Logo Design','Color Systems','Typography','Brand Guidelines','Icons'],
+    xp:83, projects:['Apex Gaming Hub','Creator Circle'],
+  },
 ];
-const CX=220, CY=220, RR=155, NN=RS.length;
-const ang  = i => (i/NN)*2*Math.PI - Math.PI/2;
-const apt  = (i,r) => ({ x:+(CX+r*Math.cos(ang(i))).toFixed(1), y:+(CY+r*Math.sin(ang(i))).toFixed(1) });
-const rPts = r => RS.map((_,i)=>{const p=apt(i,r);return `${p.x},${p.y}`;}).join(' ');
-const dPts = () => RS.map((s,i)=>{const p=apt(i,(s.value/100)*RR);return `${p.x},${p.y}`;}).join(' ');
 
-function Radar() {
-  const [ref, v] = useInView(.18);
-  const [hov, setHov] = useState(null);
+const SN_SIZE = 500;
+const SN_CX   = 250;
+const SN_CY   = 250;
+const SN_R    = 178;
+const SN_N    = SKILL_NODES.length;
+const snAngle = (i) => (i / SN_N) * 2 * Math.PI - Math.PI / 2;
+const snPos   = (i) => ({
+  x: SN_CX + SN_R * Math.cos(snAngle(i)),
+  y: SN_CY + SN_R * Math.sin(snAngle(i)),
+});
 
-  const lbl = i => {
-    const a=ang(i), r=RR+44;
-    const x=+(CX+r*Math.cos(a)).toFixed(1), y=+(CY+r*Math.sin(a)).toFixed(1);
-    const ca=Math.cos(a), sa=Math.sin(a);
-    return { x, y, anchor:ca>.15?'start':ca<-.15?'end':'middle', dy:sa>.15?'1em':sa<-.15?'-.3em':'.35em' };
-  };
+/* ══════════════════════ SKILL PANEL ════════════════════════════════════════ */
+function SkillPanel({ node }) {
+  const [visible,   setVisible]   = useState(false);
+  const [displayed, setDisplayed] = useState(null);
+
+  useEffect(() => {
+    if (!node) { setVisible(false); return; }
+    setVisible(false);
+    const t = setTimeout(() => { setDisplayed(node); setVisible(true); }, 130);
+    return () => clearTimeout(t);
+  }, [node]);
+
+  const d = displayed;
 
   return (
-    <div ref={ref}>
-      <svg viewBox="-55 -45 550 535" style={{ width:'100%', overflow:'visible' }}>
-        {/* Rings */}
-        {[1,2,3,4,5].map(k => (
-          <polygon key={k} points={rPts((k/5)*RR)} fill="none"
-            stroke={k===5 ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.04)'}
-            strokeWidth={k===5?1:.5}
-            style={{ transformOrigin:`${CX}px ${CY}px`, transform:v?'scale(1)':'scale(0)', transition:`transform .8s cubic-bezier(.16,1,.3,1) ${k*.06}s` }}
-          />
-        ))}
-        {/* Axes */}
-        {RS.map((_,i)=>{const op=apt(i,RR);return (
-          <line key={i} x1={CX} y1={CY} x2={op.x} y2={op.y}
-            stroke="rgba(255,255,255,.06)" strokeWidth={1}
-            strokeDasharray={RR} strokeDashoffset={v?0:RR}
-            style={{ transition:`stroke-dashoffset 1s ease ${i*.05}s` }} />
-        );})}
-        {/* Data area fill */}
-        <polygon points={dPts()} fill={CR06} stroke="none"
-          style={{ transformOrigin:`${CX}px ${CY}px`, transform:v?'scale(1)':'scale(0)', transition:'transform 1.2s cubic-bezier(.16,1,.3,1) .4s' }} />
-        {/* Data stroke */}
-        <polygon points={dPts()} fill="none" stroke={CR} strokeWidth={1.5}
-          style={{ transformOrigin:`${CX}px ${CY}px`, transform:v?'scale(1)':'scale(0)', transition:'transform 1.2s cubic-bezier(.16,1,.3,1) .4s', filter:`drop-shadow(0 0 7px ${CR})` }} />
-        {/* Nodes */}
-        {RS.map((s,i)=>{
-          const p=apt(i,(s.value/100)*RR), isH=hov===i;
+    <div style={{
+      background:'rgba(255,255,255,0.02)',
+      border:`1px solid ${d ? CR20 : 'rgba(255,255,255,0.07)'}`,
+      padding:'clamp(1.5rem,3vw,2.5rem)',
+      minHeight:420,
+      position:'relative',
+      overflow:'hidden',
+      transition:'border-color 0.4s ease',
+    }}>
+      {/* Crimson top accent bar — slides in when a node is active */}
+      <div style={{
+        position:'absolute', top:0, left:0,
+        width: d ? '100%' : '0%', height: 1.5,
+        background:`linear-gradient(to right,${CR},transparent)`,
+        transition:'width 0.8s cubic-bezier(.16,1,.3,1) 0.1s',
+      }} />
+
+      {!d ? (
+        /* ── Empty state ── */
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:380, gap:'1rem', opacity:0.3 }}>
+          <div style={{ width:48, height:48, border:'1px solid rgba(255,255,255,0.15)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center' }}>
+            <Target style={{ width:20, height:20, color:'rgba(255,255,255,0.4)' }} />
+          </div>
+          <span style={{ fontFamily:INTER, fontSize:'0.7rem', color:'rgba(255,255,255,0.4)', letterSpacing:'0.15em', textTransform:'uppercase', textAlign:'center' }}>
+            Hover a node to explore
+          </span>
+        </div>
+      ) : (
+        /* ── Skill detail ── */
+        <div style={{ opacity:visible?1:0, transform:visible?'translateY(0)':'translateY(14px)', transition:'opacity 0.35s ease, transform 0.35s ease' }}>
+
+          {/* Header */}
+          <div style={{ marginBottom:'1.5rem' }}>
+            <div style={{ display:'inline-flex', alignItems:'center', gap:6, marginBottom:'0.75rem' }}>
+              <span style={{ display:'inline-block', width:16, height:1.5, background:CR }} />
+              <span style={{ fontFamily:INTER, fontSize:'0.58rem', color:CR, letterSpacing:'0.28em', textTransform:'uppercase' }}>Skill</span>
+            </div>
+            <h3 style={{ fontFamily:PODIUM, color:'#fff', fontSize:'clamp(1.3rem,3vw,2rem)', textTransform:'uppercase', letterSpacing:'-0.01em', lineHeight:0.95, marginBottom:'0.75rem' }}>{d.fullLabel}</h3>
+            <p style={{ fontFamily:INTER, color:'rgba(255,255,255,0.48)', fontSize:'0.875rem', lineHeight:1.82 }}>{d.desc}</p>
+          </div>
+
+          {/* Core skill tags */}
+          <div style={{ marginBottom:'1.5rem' }}>
+            <div style={{ fontFamily:INTER, fontSize:'0.57rem', color:'rgba(255,255,255,0.22)', letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:'0.55rem' }}>Core Skills</div>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:'0.4rem' }}>
+              {d.tags.map(t => (
+                <span key={t} style={{ fontFamily:INTER, fontSize:'0.62rem', color:'rgba(255,255,255,0.52)', border:'1px solid rgba(255,255,255,0.1)', padding:'0.22rem 0.6rem', letterSpacing:'0.04em' }}>{t}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Tools */}
+          <div style={{ marginBottom:'1.5rem' }}>
+            <div style={{ fontFamily:INTER, fontSize:'0.57rem', color:'rgba(255,255,255,0.22)', letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:'0.55rem' }}>Tools</div>
+            <div style={{ fontFamily:INTER, fontSize:'0.78rem', color:CR50, letterSpacing:'0.04em', lineHeight:1.7 }}>{d.tools.join('  ·  ')}</div>
+          </div>
+
+          {/* XP bar */}
+          <div style={{ marginBottom:'1.5rem' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'0.4rem' }}>
+              <span style={{ fontFamily:INTER, fontSize:'0.57rem', color:'rgba(255,255,255,0.22)', letterSpacing:'0.18em', textTransform:'uppercase' }}>Experience</span>
+              <span style={{ fontFamily:INTER, fontSize:'0.72rem', color:CR, fontWeight:700 }}>{d.xp}%</span>
+            </div>
+            <div style={{ height:2, background:'rgba(255,255,255,0.06)', position:'relative', overflow:'hidden' }}>
+              <div style={{
+                position:'absolute', inset:'0 auto 0 0',
+                background:`linear-gradient(to right,${CR},${CR50})`,
+                width: visible ? `${d.xp}%` : '0%',
+                transition:'width 1s cubic-bezier(.16,1,.3,1) 0.2s',
+                boxShadow:`4px 0 14px ${CR}`,
+              }} />
+            </div>
+          </div>
+
+          {/* Featured projects */}
+          {d.projects.length > 0 && (
+            <div>
+              <div style={{ fontFamily:INTER, fontSize:'0.57rem', color:'rgba(255,255,255,0.22)', letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:'0.55rem' }}>Featured Projects</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:'0.35rem' }}>
+                {d.projects.map(p => (
+                  <div key={p} style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                    <CheckCircle2 style={{ width:10, height:10, color:CR, flexShrink:0 }} />
+                    <span style={{ fontFamily:INTER, fontSize:'0.72rem', color:'rgba(255,255,255,0.38)', letterSpacing:'0.03em' }}>{p}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════ SKILL NETWORK ══════════════════════════════════════ */
+function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
+  const containerRef              = useRef(null);
+  const [hoverId,  setHoverId]    = useState(null);
+  const [parallax, setParallax]   = useState({ x:0, y:0 });
+  const [inView,   setInView]     = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current; if (!el) return;
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold:0.15 });
+    obs.observe(el); return () => obs.disconnect();
+  }, []);
+
+  const onMove = (e) => {
+    const r = containerRef.current.getBoundingClientRect();
+    setParallax({
+      x: ((e.clientX - r.left - r.width  / 2) / r.width)  * 14,
+      y: ((e.clientY - r.top  - r.height / 2) / r.height) * 14,
+    });
+  };
+  const onLeave     = ()  => { setParallax({ x:0, y:0 }); setHoverId(null); if (!lockedId) setActiveId(null); };
+  const onNodeEnter = (id) => { setHoverId(id);  if (!lockedId) setActiveId(id); };
+  const onNodeLeave = ()   => { setHoverId(null); if (!lockedId) setActiveId(null); };
+  const onNodeClick = (id) => {
+    if (lockedId === id) { setLockedId(null); setActiveId(null); }
+    else { setLockedId(id); setActiveId(id); }
+  };
+
+  const effectiveId = lockedId || hoverId;
+
+  return (
+    <div ref={containerRef} onMouseMove={onMove} onMouseLeave={onLeave}
+      style={{ position:'relative', width:'100%', maxWidth:500, margin:'0 auto', aspectRatio:'1/1' }}>
+
+      {/* Parallax wrapper */}
+      <div style={{
+        position:'absolute', inset:0,
+        transform:`translate(${parallax.x}px,${parallax.y}px)`,
+        transition:'transform 0.45s cubic-bezier(.23,1,.32,1)',
+      }}>
+
+        {/* ── SVG connection lines ── */}
+        <svg viewBox={`0 0 ${SN_SIZE} ${SN_SIZE}`}
+          style={{ position:'absolute', inset:0, width:'100%', height:'100%', overflow:'visible' }}>
+          <defs>
+            <filter id="sn-glow">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          {SKILL_NODES.map((node, i) => {
+            const p = snPos(i);
+            const isAct = effectiveId === node.id;
+            return (
+              <g key={node.id}>
+                {/* Base static line */}
+                <line x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
+                  stroke={isAct ? CR50 : 'rgba(255,255,255,0.05)'}
+                  strokeWidth={isAct ? 1.5 : 0.8}
+                  style={{ transition:'stroke 0.3s ease, stroke-width 0.3s ease' }}
+                />
+                {/* Animated flowing dash */}
+                {inView && (
+                  <line x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
+                    stroke={isAct ? CR : 'rgba(220,20,60,0.2)'}
+                    strokeWidth={isAct ? 1.5 : 0.8}
+                    strokeDasharray="3 14"
+                    style={{
+                      filter: isAct ? 'url(#sn-glow)' : 'none',
+                      transition:'stroke 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease',
+                      animation:`sn-dash ${2.0 + i * 0.18}s linear infinite`,
+                      animationDelay:`${-i * 0.3}s`,
+                      willChange:'stroke-dashoffset',
+                    }}
+                  />
+                )}
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* ── Center hub ── */}
+        <div style={{
+          position:'absolute', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+          width:82, height:82, borderRadius:'50%',
+          background:'linear-gradient(135deg,#0d0d0d,#060606)',
+          border:`1.5px solid ${CR20}`,
+          display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:2,
+          boxShadow:`0 0 40px ${CR10}, 0 0 80px ${CR06}, inset 0 0 24px rgba(0,0,0,0.9)`,
+          opacity: inView ? 1 : 0,
+          transition:'opacity 0.7s ease 0.15s',
+          zIndex:2, userSelect:'none',
+        }}>
+          <span style={{ fontFamily:PODIUM, fontSize:'0.5rem', color:CR, letterSpacing:'0.1em', textTransform:'uppercase', lineHeight:1.4, textAlign:'center' }}>
+            CORE<br/>SKILLS
+          </span>
+          {/* Outer pulse ring */}
+          <div style={{ position:'absolute', inset:-12, borderRadius:'50%', border:`1px solid ${CR10}`, animation:'sn-ring 3.5s ease-in-out infinite' }} />
+        </div>
+
+        {/* ── Satellite skill nodes ── */}
+        {SKILL_NODES.map((node, i) => {
+          const p     = snPos(i);
+          const pctX  = (p.x / SN_SIZE) * 100;
+          const pctY  = (p.y / SN_SIZE) * 100;
+          const isAct  = effectiveId === node.id;
+          const isLock = lockedId === node.id;
+
           return (
-            <g key={i} onMouseEnter={()=>setHov(i)} onMouseLeave={()=>setHov(null)} style={{ cursor:'pointer' }}>
-              <circle cx={p.x} cy={p.y} r={isH?20:0} fill={CR10} style={{ transition:'r .3s ease', opacity:v?1:0 }} />
-              <circle cx={p.x} cy={p.y} r={isH?6:4} fill={isH?CR:'#fff'} stroke={CR} strokeWidth={1.5}
-                style={{ transformOrigin:`${p.x}px ${p.y}px`, transform:v?'scale(1)':'scale(0)', transition:`transform .5s ease ${.8+i*.07}s, r .3s, fill .3s`, filter:isH?`drop-shadow(0 0 12px ${CR})`:'none' }} />
-            </g>
+            <div key={node.id}
+              onMouseEnter={() => onNodeEnter(node.id)}
+              onMouseLeave={onNodeLeave}
+              onClick={() => onNodeClick(node.id)}
+              style={{
+                position:'absolute',
+                left:`${pctX}%`, top:`${pctY}%`,
+                transform:`translate(-50%,-50%) scale(${isAct ? 1.22 : 1})`,
+                width:60, height:60, borderRadius:'50%',
+                background: isAct
+                  ? `radial-gradient(circle at 40% 35%,${CR10},rgba(0,0,0,0.95))`
+                  : 'radial-gradient(circle at 40% 35%,rgba(30,30,30,0.98),rgba(8,8,8,0.98))',
+                border:`1.5px solid ${isAct ? CR : isLock ? CR50 : 'rgba(255,255,255,0.1)'}`,
+                display:'flex', alignItems:'center', justifyContent:'center',
+                cursor:'pointer', zIndex: isAct ? 4 : 3,
+                opacity: inView ? 1 : 0,
+                boxShadow: isAct
+                  ? `0 0 24px ${CR50}, 0 0 48px ${CR20}, inset 0 0 16px rgba(220,20,60,0.06)`
+                  : '0 2px 16px rgba(0,0,0,0.8)',
+                transition: [
+                  'transform 0.38s cubic-bezier(.23,1,.32,1)',
+                  'border-color 0.28s ease',
+                  'background 0.28s ease',
+                  'box-shadow 0.32s ease',
+                  `opacity 0.6s ease ${0.06 + i * 0.065}s`,
+                ].join(','),
+                animation: isAct ? 'none' : `sn-pulse ${3.0 + i * 0.38}s ease-in-out infinite`,
+                animationDelay: `${i * 0.24}s`,
+                willChange:'transform',
+              }}
+            >
+              <span style={{
+                fontFamily:INTER,
+                fontSize:'0.46rem',
+                color: isAct ? '#fff' : 'rgba(255,255,255,0.5)',
+                letterSpacing:'0.05em',
+                textTransform:'uppercase',
+                textAlign:'center',
+                lineHeight:1.35,
+                padding:'0 6px',
+                transition:'color 0.28s ease',
+                userSelect:'none',
+                pointerEvents:'none',
+              }}>{node.label}</span>
+
+              {/* Lock indicator dot */}
+              {isLock && (
+                <div style={{ position:'absolute', top:-2, right:-2, width:7, height:7, borderRadius:'50%', background:CR, boxShadow:`0 0 10px ${CR}` }} />
+              )}
+            </div>
           );
         })}
-        {/* Labels */}
-        {RS.map((s,i)=>{
-          const {x,y,anchor,dy}=lbl(i);
-          return (
-            <text key={i} x={x} y={y} dy={dy} textAnchor={anchor}
-              fill={hov===i?CR:'rgba(255,255,255,.45)'}
-              style={{ fontFamily:INTER, fontSize:'10.5px', letterSpacing:'.04em', textTransform:'uppercase', opacity:v?1:0, transition:`opacity .6s ease ${.6+i*.05}s, fill .3s` }}>
-              {s.name}
-            </text>
-          );
-        })}
-        {/* Glassmorphism tooltip */}
-        {hov!==null&&(()=>{
-          const s=RS[hov], p=apt(hov,(s.value/100)*RR);
-          const W=106, H=50, tx=p.x>CX?p.x-W-14:p.x+14, ty=p.y>CY?p.y-H-10:p.y+10;
-          return (
-            <g>
-              <rect x={tx} y={ty} width={W} height={H} rx={6}
-                fill="rgba(6,6,6,.88)" stroke={CR20} strokeWidth={1}
-                style={{ filter:'blur(0px)' }} />
-              {/* top-left accent */}
-              <rect x={tx} y={ty} width={3} height={H} rx={6} fill={CR} opacity={.7} />
-              <text x={tx+12} y={ty+18} fill="rgba(255,255,255,.75)"
-                style={{ fontFamily:INTER, fontSize:'9.5px', fontWeight:600 }}>{s.name}</text>
-              <text x={tx+12} y={ty+36} fill={CR}
-                style={{ fontFamily:INTER, fontSize:'15px', fontWeight:800 }}>{s.value}%</text>
-            </g>
-          );
-        })()}
-      </svg>
+      </div>
     </div>
   );
 }
 
 /* ══════════════════════ SKILLS SECTION ══════════════════════════════════════ */
-const SKILL_LIST = [
-  { l:'Discord Server Design',  pct:95, d:'Channel architecture, roles, permissions, embeds & branding' },
-  { l:'Discord Server Dev',     pct:92, d:'Full server builds from zero — structured for scale' },
-  { l:'Bot Setup & Config',     pct:90, d:'Carl-bot, MEE6, Dyno, Ticket Tool and more' },
-  { l:'Bot Automation',         pct:87, d:'Custom automation flows, triggers, and slash commands' },
-  { l:'UI/UX Design',           pct:88, d:'Figma — dashboards, landing pages, design systems' },
-  { l:'Community Management',   pct:85, d:'Moderation, growth strategy, engagement systems' },
-];
-
 function Skills() {
-  const [secRef, secV] = useInView(.08);
+  const [activeId, setActiveId] = useState(null);
+  const [lockedId, setLockedId] = useState(null);
+  const activeNode = SKILL_NODES.find(n => n.id === (lockedId || activeId)) || null;
+
   return (
     <SW id="skills" bg="#050505">
       <SH eyebrow="Expertise" bg="SKILLS"
         title={<>My skill<br /><span style={{ color:CR }}>arsenal.</span></>}
-        sub="A data-driven breakdown of the capabilities I bring to every Discord and design project."
+        sub="An interactive skill network — hover or click any node to explore my expertise in depth."
       />
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'5rem', alignItems:'center' }}>
-        <Reveal><Radar /></Reveal>
-        <div ref={secRef} style={{ display:'flex', flexDirection:'column', gap:'1.75rem' }}>
-          {SKILL_LIST.map((sk,i) => (
-            <Reveal key={sk.l} d={i*.07}>
-              <div>
-                <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'.5rem' }}>
-                  <span style={{ fontFamily:INTER, fontSize:'.82rem', color:'rgba(255,255,255,.8)', fontWeight:500 }}>{sk.l}</span>
-                  <span style={{ fontFamily:INTER, fontSize:'.78rem', color:CR, fontWeight:700 }}>{sk.pct}%</span>
-                </div>
-                <div style={{ height:2, background:'rgba(255,255,255,.06)', position:'relative', overflow:'hidden' }}>
-                  <div style={{
-                    position:'absolute', inset:'0 auto 0 0',
-                    background:`linear-gradient(to right,${CR},${CR50})`,
-                    width:`${sk.pct}%`, transformOrigin:'left',
-                    transform:secV?'scaleX(1)':'scaleX(0)',
-                    transition:`transform 1.2s cubic-bezier(.16,1,.3,1) ${i*.12}s`,
-                    boxShadow:secV?`4px 0 12px ${CR20}`:undefined,
-                  }} />
-                </div>
-                <div style={{ fontFamily:INTER, fontSize:'.62rem', color:'rgba(255,255,255,.22)', marginTop:'.3rem', letterSpacing:'.03em' }}>{sk.d}</div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,380px),1fr))', gap:'clamp(2rem,5vw,5rem)', alignItems:'start' }}>
+        <SkillNetwork setActiveId={setActiveId} lockedId={lockedId} setLockedId={setLockedId} />
+        <SkillPanel node={activeNode} />
       </div>
     </SW>
   );
