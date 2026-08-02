@@ -451,14 +451,25 @@ a, button, [role='button'] { cursor: pointer; }
 }
 
 @keyframes sn-pulse {
-  0%,100% { box-shadow: 0 2px 16px rgba(0,0,0,0.8), 0 0 0 0   rgba(220,20,60,0.14); }
-  50%     { box-shadow: 0 2px 16px rgba(0,0,0,0.8), 0 0 0 8px rgba(220,20,60,0);    }
+  0%,100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 0   rgba(220,20,60,0.12); }
+  50%     { box-shadow: 0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 0 9px rgba(220,20,60,0);    }
 }
 
 @keyframes sn-ring {
   0%,100% { opacity: 0.35; transform: scale(1);    }
   50%     { opacity: 0.10; transform: scale(1.14); }
 }
+
+@keyframes sn-hub-spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes sn-node-spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
 
 
 /* ─── Mobile-safe full-screen hero height ── */

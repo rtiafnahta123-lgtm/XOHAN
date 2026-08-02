@@ -304,39 +304,25 @@ const SKILL_NODES = [
     xp:88, projects:['Nebula Dashboard','Apex Gaming Hub'],
   },
   {
-    id:'frontend', label:'Frontend Dev', fullLabel:'Frontend Development',
-    desc:'React-powered interfaces with modern CSS, smooth animations, and responsive layouts — performant and pixel-perfect.',
-    tools:['React','Vite','TailwindCSS','CSS3','Framer Motion'],
-    tags:['React','Responsive','Animations','CSS','Performance'],
-    xp:82, projects:['Nebula Dashboard','XOHAN Portfolio'],
+    id:'community', label:'Community Mgmt', fullLabel:'Community Management',
+    desc:'Full ongoing management of your Discord community — moderation, engagement campaigns, member growth, and health reporting.',
+    tools:['Carl-bot','MEE6','Dyno','Statbot','Discord API'],
+    tags:['Moderation','Engagement','Member Growth','Conflict Resolution','Health Reports'],
+    xp:85, projects:['Creator Circle','Apex Gaming Hub','EduStream Academy'],
   },
   {
-    id:'backend', label:'Backend Dev', fullLabel:'Backend Development',
-    desc:'Node.js server-side logic, REST APIs, and bot backends — reliable, scalable, and well-structured.',
-    tools:['Node.js','Express','REST API','WebSockets','JWT'],
-    tags:['REST APIs','Auth','WebSockets','Middleware','Error Handling'],
-    xp:78, projects:['CryptoVault Community','Nebula Dashboard'],
+    id:'dashboard', label:'Dashboard UI', fullLabel:'Dashboard UI',
+    desc:'End-to-end dashboard UI design for SaaS and analytics platforms — delivered as structured Figma files with a full component library.',
+    tools:['Figma','FigJam','Adobe XD','Framer','Principle'],
+    tags:['Admin UI','Data Viz','Component Library','Figma','Design Tokens'],
+    xp:83, projects:['Nebula Dashboard','XOHAN Portfolio'],
   },
   {
-    id:'database', label:'Database', fullLabel:'Database Design',
-    desc:'Structured data models for Discord bots and web apps — optimized schemas and clean query design.',
-    tools:['MongoDB','PostgreSQL','Supabase','Prisma','Redis'],
-    tags:['Schema Design','Indexing','Queries','Relations','Caching'],
-    xp:75, projects:['CryptoVault Community'],
-  },
-  {
-    id:'api', label:'API Integration', fullLabel:'API Integration',
-    desc:'Connecting Discord bots and web apps to third-party services — clean, typed, and error-resilient integrations.',
-    tools:['REST','GraphQL','Discord API','Stripe','OAuth2'],
-    tags:['Auth','Webhooks','Rate Limiting','Error Handling','OAuth'],
-    xp:80, projects:['CryptoVault Community','Nebula Dashboard'],
-  },
-  {
-    id:'branding', label:'Branding', fullLabel:'Branding',
-    desc:'Visual identity systems for Discord communities and digital products — logos, color systems, and brand guidelines.',
-    tools:['Figma','Illustrator','Photoshop','Canva Pro'],
-    tags:['Logo Design','Color Systems','Typography','Brand Guidelines','Icons'],
-    xp:83, projects:['Apex Gaming Hub','Creator Circle'],
+    id:'strategy', label:'Strategy', fullLabel:'Strategy',
+    desc:'Growth strategy and community architecture planning — roadmaps, engagement funnels, and data-driven retention systems.',
+    tools:['Notion','Airtable','Discord Insights','Analytics'],
+    tags:['Roadmaps','Engagement Funnels','Retention','Analytics','Growth Planning'],
+    xp:80, projects:['Apex Gaming Hub','Creator Circle'],
   },
 ];
 
@@ -462,10 +448,9 @@ function SkillPanel({ node }) {
 
 /* ══════════════════════ SKILL NETWORK ══════════════════════════════════════ */
 function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
-  const containerRef              = useRef(null);
-  const [hoverId,  setHoverId]    = useState(null);
-  const [parallax, setParallax]   = useState({ x:0, y:0 });
-  const [inView,   setInView]     = useState(false);
+  const containerRef           = useRef(null);
+  const [hoverId,  setHoverId] = useState(null);
+  const [inView,   setInView]  = useState(false);
 
   useEffect(() => {
     const el = containerRef.current; if (!el) return;
@@ -473,16 +458,9 @@ function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
     obs.observe(el); return () => obs.disconnect();
   }, []);
 
-  const onMove = (e) => {
-    const r = containerRef.current.getBoundingClientRect();
-    setParallax({
-      x: ((e.clientX - r.left - r.width  / 2) / r.width)  * 14,
-      y: ((e.clientY - r.top  - r.height / 2) / r.height) * 14,
-    });
-  };
-  const onLeave     = ()  => { setParallax({ x:0, y:0 }); setHoverId(null); if (!lockedId) setActiveId(null); };
-  const onNodeEnter = (id) => { setHoverId(id);  if (!lockedId) setActiveId(id); };
-  const onNodeLeave = ()   => { setHoverId(null); if (!lockedId) setActiveId(null); };
+  const onLeave     = ()   => { setHoverId(null); if (!lockedId) setActiveId(null); };
+  const onNodeEnter = (id) => { setHoverId(id);   if (!lockedId) setActiveId(id); };
+  const onNodeLeave = ()   => { setHoverId(null);  if (!lockedId) setActiveId(null); };
   const onNodeClick = (id) => {
     if (lockedId === id) { setLockedId(null); setActiveId(null); }
     else { setLockedId(id); setActiveId(id); }
@@ -491,51 +469,91 @@ function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
   const effectiveId = lockedId || hoverId;
 
   return (
-    <div ref={containerRef} onMouseMove={onMove} onMouseLeave={onLeave}
+    <div ref={containerRef} onMouseLeave={onLeave}
       style={{ position:'relative', width:'100%', maxWidth:500, margin:'0 auto', aspectRatio:'1/1' }}>
 
-      {/* Parallax wrapper */}
-      <div style={{
-        position:'absolute', inset:0,
-        transform:`translate(${parallax.x}px,${parallax.y}px)`,
-        transition:'transform 0.45s cubic-bezier(.23,1,.32,1)',
-      }}>
+      {/* Fixed graph — no parallax, no movement */}
+      <div style={{ position:'absolute', inset:0 }}>
 
-        {/* ── SVG connection lines ── */}
+        {/* ── SVG connection lines + particles ── */}
         <svg viewBox={`0 0 ${SN_SIZE} ${SN_SIZE}`}
           style={{ position:'absolute', inset:0, width:'100%', height:'100%', overflow:'visible' }}>
           <defs>
-            <filter id="sn-glow">
-              <feGaussianBlur stdDeviation="2.5" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            {/* Glow filter for active lines */}
+            <filter id="sn-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
+            {/* Strong glow for particles */}
+            <filter id="sn-particle-glow" x="-200%" y="-200%" width="500%" height="500%">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            {/* Gradient for each active line — center (CR) to node (transparent) */}
+            {SKILL_NODES.map((node, i) => {
+              const p = snPos(i);
+              const len = Math.sqrt((p.x-SN_CX)**2 + (p.y-SN_CY)**2);
+              return (
+                <linearGradient key={node.id} id={`sn-grad-${i}`}
+                  x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
+                  gradientUnits="userSpaceOnUse">
+                  <stop offset="0%"   stopColor={CR}  stopOpacity="0.9"/>
+                  <stop offset="60%"  stopColor={CR}  stopOpacity="0.4"/>
+                  <stop offset="100%" stopColor={CR}  stopOpacity="0.1"/>
+                </linearGradient>
+              );
+            })}
           </defs>
+
           {SKILL_NODES.map((node, i) => {
-            const p = snPos(i);
+            const p     = snPos(i);
             const isAct = effectiveId === node.id;
+            const lineLen = Math.sqrt((p.x-SN_CX)**2 + (p.y-SN_CY)**2);
             return (
               <g key={node.id}>
-                {/* Base static line */}
+                {/* Dim base track */}
                 <line x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
-                  stroke={isAct ? CR50 : 'rgba(255,255,255,0.05)'}
-                  strokeWidth={isAct ? 1.5 : 0.8}
-                  style={{ transition:'stroke 0.3s ease, stroke-width 0.3s ease' }}
+                  stroke={isAct ? 'rgba(220,20,60,0.18)' : 'rgba(255,255,255,0.04)'}
+                  strokeWidth={isAct ? 2 : 0.75}
+                  style={{ transition:'stroke 0.4s ease, stroke-width 0.4s ease' }}
                 />
-                {/* Animated flowing dash */}
+
+                {/* Active: glowing gradient beam */}
+                {isAct && (
+                  <line x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
+                    stroke={`url(#sn-grad-${i})`}
+                    strokeWidth={1.5}
+                    filter="url(#sn-glow)"
+                  />
+                )}
+
+                {/* Always-on subtle flowing dashes */}
                 {inView && (
                   <line x1={SN_CX} y1={SN_CY} x2={p.x} y2={p.y}
-                    stroke={isAct ? CR : 'rgba(220,20,60,0.2)'}
-                    strokeWidth={isAct ? 1.5 : 0.8}
-                    strokeDasharray="3 14"
+                    stroke={isAct ? CR : 'rgba(220,20,60,0.15)'}
+                    strokeWidth={isAct ? 1.2 : 0.6}
+                    strokeDasharray={isAct ? '4 10' : '2 18'}
                     style={{
                       filter: isAct ? 'url(#sn-glow)' : 'none',
-                      transition:'stroke 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease',
-                      animation:`sn-dash ${2.0 + i * 0.18}s linear infinite`,
-                      animationDelay:`${-i * 0.3}s`,
+                      transition:'stroke 0.4s ease, stroke-width 0.4s ease, filter 0.4s ease',
+                      animation:`sn-dash ${isAct ? 1.2 : (2.8 + i * 0.2)}s linear infinite`,
+                      animationDelay:`${-i * 0.35}s`,
                       willChange:'stroke-dashoffset',
                     }}
                   />
                 )}
+
+                {/* Active: fast travelling particle */}
+                {inView && isAct && (
+                  <circle r={3} fill={CR} filter="url(#sn-particle-glow)"
+                    style={{ animation:`sn-particle-${i} 1.4s linear infinite` }}>
+                    <animateMotion dur="1.4s" repeatCount="indefinite" rotate="auto">
+                      <mpath xlinkHref={`#sn-path-${i}`}/>
+                    </animateMotion>
+                  </circle>
+                )}
+                {/* Hidden path for particle motion */}
+                <path id={`sn-path-${i}`} d={`M${SN_CX},${SN_CY} L${p.x},${p.y}`} fill="none" stroke="none"/>
               </g>
             );
           })}
@@ -544,27 +562,29 @@ function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
         {/* ── Center hub ── */}
         <div style={{
           position:'absolute', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
-          width:82, height:82, borderRadius:'50%',
-          background:'linear-gradient(135deg,#0d0d0d,#060606)',
+          width:88, height:88, borderRadius:'50%',
+          background:'radial-gradient(circle at 38% 32%,#181818,#060606 70%)',
           border:`1.5px solid ${CR20}`,
           display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:2,
-          boxShadow:`0 0 40px ${CR10}, 0 0 80px ${CR06}, inset 0 0 24px rgba(0,0,0,0.9)`,
+          boxShadow:`0 0 0 1px ${CR06}, 0 0 32px ${CR20}, 0 0 64px ${CR10}, inset 0 1px 0 rgba(255,255,255,0.06), inset 0 0 28px rgba(0,0,0,0.95)`,
           opacity: inView ? 1 : 0,
           transition:'opacity 0.7s ease 0.15s',
           zIndex:2, userSelect:'none',
         }}>
-          <span style={{ fontFamily:PODIUM, fontSize:'0.5rem', color:CR, letterSpacing:'0.1em', textTransform:'uppercase', lineHeight:1.4, textAlign:'center' }}>
+          <span style={{ fontFamily:PODIUM, fontSize:'0.5rem', color:CR, letterSpacing:'0.12em', textTransform:'uppercase', lineHeight:1.4, textAlign:'center' }}>
             CORE<br/>SKILLS
           </span>
-          {/* Outer pulse ring */}
-          <div style={{ position:'absolute', inset:-12, borderRadius:'50%', border:`1px solid ${CR10}`, animation:'sn-ring 3.5s ease-in-out infinite' }} />
+          {/* Slow rotating outer ring */}
+          <div style={{ position:'absolute', inset:-14, borderRadius:'50%', border:`1px solid ${CR10}`, borderTopColor:CR20, animation:'sn-hub-spin 8s linear infinite' }} />
+          {/* Breathing glow ring */}
+          <div style={{ position:'absolute', inset:-8, borderRadius:'50%', border:`1px solid ${CR10}`, animation:'sn-ring 3.5s ease-in-out infinite' }} />
         </div>
 
         {/* ── Satellite skill nodes ── */}
         {SKILL_NODES.map((node, i) => {
-          const p     = snPos(i);
-          const pctX  = (p.x / SN_SIZE) * 100;
-          const pctY  = (p.y / SN_SIZE) * 100;
+          const p      = snPos(i);
+          const pctX   = (p.x / SN_SIZE) * 100;
+          const pctY   = (p.y / SN_SIZE) * 100;
           const isAct  = effectiveId === node.id;
           const isLock = lockedId === node.id;
 
@@ -576,47 +596,61 @@ function SkillNetwork({ setActiveId, lockedId, setLockedId }) {
               style={{
                 position:'absolute',
                 left:`${pctX}%`, top:`${pctY}%`,
-                transform:`translate(-50%,-50%) scale(${isAct ? 1.22 : 1})`,
-                width:60, height:60, borderRadius:'50%',
+                /* Only scale on hover/active — no position shift */
+                transform:`translate(-50%,-50%) scale(${isAct ? 1.2 : 1})`,
+                width:62, height:62, borderRadius:'50%',
                 background: isAct
-                  ? `radial-gradient(circle at 40% 35%,${CR10},rgba(0,0,0,0.95))`
-                  : 'radial-gradient(circle at 40% 35%,rgba(30,30,30,0.98),rgba(8,8,8,0.98))',
-                border:`1.5px solid ${isAct ? CR : isLock ? CR50 : 'rgba(255,255,255,0.1)'}`,
+                  ? `radial-gradient(circle at 38% 32%,rgba(220,20,60,0.18),rgba(6,6,6,0.97) 70%)`
+                  : `radial-gradient(circle at 38% 32%,rgba(40,40,40,0.9),rgba(8,8,8,0.97) 70%)`,
+                border:`1.5px solid ${isAct ? CR : isLock ? CR50 : 'rgba(255,255,255,0.09)'}`,
                 display:'flex', alignItems:'center', justifyContent:'center',
                 cursor:'pointer', zIndex: isAct ? 4 : 3,
                 opacity: inView ? 1 : 0,
                 boxShadow: isAct
-                  ? `0 0 24px ${CR50}, 0 0 48px ${CR20}, inset 0 0 16px rgba(220,20,60,0.06)`
-                  : '0 2px 16px rgba(0,0,0,0.8)',
+                  ? `0 0 0 1px ${CR20}, 0 0 20px ${CR50}, 0 0 40px ${CR20}, inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 20px rgba(220,20,60,0.08)`
+                  : `0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.04)`,
                 transition: [
                   'transform 0.38s cubic-bezier(.23,1,.32,1)',
-                  'border-color 0.28s ease',
-                  'background 0.28s ease',
-                  'box-shadow 0.32s ease',
-                  `opacity 0.6s ease ${0.06 + i * 0.065}s`,
+                  'border-color 0.3s ease',
+                  'background 0.3s ease',
+                  'box-shadow 0.35s ease',
+                  `opacity 0.65s ease ${0.06 + i * 0.07}s`,
                 ].join(','),
-                animation: isAct ? 'none' : `sn-pulse ${3.0 + i * 0.38}s ease-in-out infinite`,
-                animationDelay: `${i * 0.24}s`,
-                willChange:'transform',
+                /* Idle breathing pulse — stops when active */
+                animation: isAct ? 'none' : `sn-pulse ${3.2 + i * 0.35}s ease-in-out infinite`,
+                animationDelay: `${i * 0.28}s`,
+                willChange:'transform, box-shadow',
+                overflow:'visible',
               }}
             >
+              {/* Rotating border arc — active only */}
+              {isAct && (
+                <div style={{
+                  position:'absolute', inset:-5, borderRadius:'50%',
+                  border:'1.5px solid transparent',
+                  borderTopColor:CR, borderRightColor:`${CR}40`,
+                  animation:'sn-node-spin 1.8s linear infinite',
+                  pointerEvents:'none',
+                }} />
+              )}
+
               <span style={{
                 fontFamily:INTER,
-                fontSize:'0.46rem',
-                color: isAct ? '#fff' : 'rgba(255,255,255,0.5)',
-                letterSpacing:'0.05em',
+                fontSize:'0.47rem',
+                color: isAct ? '#fff' : 'rgba(255,255,255,0.48)',
+                letterSpacing:'0.06em',
                 textTransform:'uppercase',
                 textAlign:'center',
                 lineHeight:1.35,
-                padding:'0 6px',
-                transition:'color 0.28s ease',
+                padding:'0 5px',
+                transition:'color 0.3s ease',
                 userSelect:'none',
                 pointerEvents:'none',
               }}>{node.label}</span>
 
-              {/* Lock indicator dot */}
+              {/* Lock dot */}
               {isLock && (
-                <div style={{ position:'absolute', top:-2, right:-2, width:7, height:7, borderRadius:'50%', background:CR, boxShadow:`0 0 10px ${CR}` }} />
+                <div style={{ position:'absolute', top:-2, right:-2, width:7, height:7, borderRadius:'50%', background:CR, boxShadow:`0 0 10px ${CR}, 0 0 20px ${CR}` }} />
               )}
             </div>
           );
